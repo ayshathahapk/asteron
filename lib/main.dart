@@ -1,12 +1,10 @@
 import 'package:asteron/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'Core/Utils/notification service.dart';
 import 'Core/Utils/size_utils.dart';
 import 'firebase_options.dart';
@@ -28,13 +26,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-  //   await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
-  // }
-  //
-  // if (!kIsWeb) {
-  //   await localhostServer.start();
-  // }
   FirebaseMessaging.instance.requestPermission();
   await NotificationService.init();
   await flutterLocalNotificationsPlugin

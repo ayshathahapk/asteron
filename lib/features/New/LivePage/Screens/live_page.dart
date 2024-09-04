@@ -159,7 +159,7 @@ class _LivePageState extends ConsumerState<LivePage> {
   @override
   Widget build(BuildContext context) {
     final liveRateData = ref.watch(liveRateProvider);
-    return Container(
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -240,11 +240,11 @@ class _LivePageState extends ConsumerState<LivePage> {
             ),
           ),
           space(),
-
+      
           Consumer(
             builder: (context, ref1, child) {
               final spreadNow = ref1.watch(spreadDataProvider2);
-
+      
               if (liveRateData != null) {
                 print("######## here ########");
                 print(spreadNow?.editedBidSpreadValue);
@@ -617,7 +617,7 @@ class _LivePageState extends ConsumerState<LivePage> {
               return Consumer(
                 builder: (context, ref2, child) {
                   print("Consumer is rebulding");
-
+      
                   return Expanded(
                       flex: 0,
                       child: ListView.builder(
@@ -926,7 +926,7 @@ class _LivePageState extends ConsumerState<LivePage> {
                               ),
                             );
                           }
-
+      
                           // return Padding(
                           //   padding: EdgeInsets.only(top: 8.0.v, bottom: 8.0.v),
                           //   child: Container(
@@ -985,7 +985,7 @@ class _LivePageState extends ConsumerState<LivePage> {
               return SizedBox();
             },
           ),
-
+      
           ref.watch(newsStream).when(
             data: (data) {
               if (data != null) {
@@ -1009,7 +1009,7 @@ class _LivePageState extends ConsumerState<LivePage> {
               return SizedBox();
             },
           )
-
+      
           // AutoScrollText(
           //   delayBefore: Duration(seconds: 3),
           //   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",

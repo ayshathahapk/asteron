@@ -5,6 +5,7 @@ class FirebaseConstants {
   static const alert = "alert";
   static const spread = "spread";
   static const spreadDocument = "spreadDocument";
+  static const bank = "bank";
   // static const bookings = "bookings";
   static const user = "users";
   // static const test = "V9e4v0UtSzUrPVgxtJzOTkq71do2";

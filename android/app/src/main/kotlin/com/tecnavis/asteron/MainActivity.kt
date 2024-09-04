@@ -1,4 +1,4 @@
-package com.example.asteron
+package com.tecnavis.asteron
 
 import io.flutter.embedding.android.FlutterActivity
 
