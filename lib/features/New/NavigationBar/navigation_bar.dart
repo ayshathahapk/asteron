@@ -175,6 +175,7 @@ class _NavigationBarState extends ConsumerState<NavigationBarScreen> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: appTheme.mainBlue),
           child: CurvedNavigationBar(
+            height: SizeUtils.height * 0.07,
             key: _bottomNavigationKey,
             index: 0,
             items: <Widget>[

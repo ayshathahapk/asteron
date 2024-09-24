@@ -1,30 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asteron/Core/Utils/type_def.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../Core/Utils/failure.dart';
-import '../../../../Core/Utils/type_def.dart';
 import '../../../../Core/app_export.dart';
-import '../../../Models/commodities_model.dart';
 import '../../../Models/news_model.dart';
-import '../../../Models/spot_rate_model.dart';
-import '../../../Models/spread_document_model.dart';
 
-final liveRepoNewProvider = Provider<LiveRepositoryNew>(
-  (ref) => LiveRepositoryNew(),
+final liveRepoNewProvider = Provider<NewsRepository>(
+  (ref) => NewsRepository(),
 );
 
-class LiveRepositoryNew {
-  FutureEither<SpotRateModel> getSpotRate() async {
+class NewsRepository {
+  FutureEither<NewsModel> getNews() async {
     try {
       final responce = await Dio().get(
-        "${FirebaseConstants.baseUrl}get-spotrates/${FirebaseConstants.adminId}",
+        "${FirebaseConstants.baseUrl}get-news/${FirebaseConstants.adminId}",
         options: Options(headers: FirebaseConstants.headers, method: "GET"),
       );
       if (responce.statusCode == 200) {
-        final spotRateModel = SpotRateModel.fromMap(responce.data);
+        final spotRateModel = NewsModel.fromMap(responce.data);
         return right(spotRateModel);
       } else {
         return left(Failure(responce.statusCode.toString()));

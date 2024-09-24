@@ -8,6 +8,12 @@ class FirebaseConstants {
   static const bank = "bank";
   // static const bookings = "bookings";
   static const user = "users";
-  // static const test = "V9e4v0UtSzUrPVgxtJzOTkq71do2";
-  // static const test = "BrrFdNV51fNXmin6Kkb3dLalQbd2";
+  static const secretKey = "IfiuH/ko+rh/gekRvY4Va0s+aGYuGJEAOkbJbChhcqo=";
+  static const baseUrl = "https://api.aurify.ae/user/";
+  static const adminId = "66ed8fca9654078fd5336380";
+  // static const adminId = "66d9a4df9f85d7b6c6d1c1ff";
+  static const headers = {
+    'X-Secret-Key': secretKey,
+    'Content-Type': 'application/json',
+  };
 }

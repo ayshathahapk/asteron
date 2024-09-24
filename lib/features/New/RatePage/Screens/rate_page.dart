@@ -6,6 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Models/alertValue_model.dart';
+import '../../LivePage/Controller/live_controller.dart';
 import '../../LivePage/Repository/live_repository.dart';
 import '../../LivePage/Screens/live_page.dart';
 import '../Controller/rate_controller.dart';
@@ -78,13 +79,27 @@ class _RatePageState extends ConsumerState<RatePage> {
                   children: [
                     Consumer(
                       builder: (context, ref1, child) {
-                        final spreadNow = ref1.watch(spreadDataProvider2);
                         final liveRateData = ref1.watch(liveRateProvider);
-                        ref1.watch(rateBidValue);
-                        final res = ref1.watch(rateBidValue);
-                        return Text(
-                          "\$${(liveRateData?.gold.bid ?? 0 + (spreadNow?.editedBidSpreadValue ?? 0)).toStringAsFixed(2)}",
-                          style: CustomPoppinsTextStyles.bodyText1White,
+                        return ref1.watch(spotRateProvider).when(
+                          data: (data) {
+                            final spreadNow = data!.info;
+                            return Text(
+                              "${liveRateData!.gold!.bid + (spreadNow.goldBidSpread)}",
+                              style: CustomPoppinsTextStyles.bodyText1White,
+                            );
+                          },
+                          error: (error, stackTrace) {
+                            return Text(
+                              "0",
+                              style: CustomPoppinsTextStyles.bodyText1White,
+                            );
+                          },
+                          loading: () {
+                            return Text(
+                              "0",
+                              style: CustomPoppinsTextStyles.bodyText1White,
+                            );
+                          },
                         );
                       },
                     ),
