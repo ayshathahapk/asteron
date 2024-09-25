@@ -90,7 +90,7 @@ class LiveRateNotifier extends StateNotifier<LiveRateModel?> {
   }
 
   void _requestMarketData(List<String> symbols) {
-    _socket?.emit('request-data', symbols);
+    _socket?.emit('request-data', ["GOLD, SILVER"]);
   }
 
   @override
