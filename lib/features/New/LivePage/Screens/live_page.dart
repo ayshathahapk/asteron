@@ -280,7 +280,9 @@ class _LivePageState extends ConsumerState<LivePage> {
                   return ref1.watch(spotRateProvider).when(
                     data: (spotRate) {
                       if (spotRate != null) {
-                        if (liveRateData != null) {
+                        if (liveRateData != null &&
+                        liveRateData.gold !=null&&
+                        liveRateData.silver !=null) {
                           final spreadNow = spotRate.info;
                           WidgetsBinding.instance.addPostFrameCallback(
                             (timeStamp) {

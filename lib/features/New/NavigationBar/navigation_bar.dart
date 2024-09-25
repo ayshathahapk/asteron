@@ -8,16 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-// import 'package:asteron/New/LivePage/Screens/live_page_initialising.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../Core/CommenWidgets/custom_image_view.dart';
 import '../../../Core/CommenWidgets/noNetworkScreen.dart';
 import '../../../Core/Utils/firebase_constants.dart';
 import '../../../Core/Utils/notification service.dart';
 import '../LivePage/Screens/live_page.dart';
 import '../LivePage/Screens/live_page_initialising.dart';
-import '../ProfilePage/Screems/2_profile_screen.dart';
 import '../ProfilePage/Screems/profile_page.dart';
 import '../RatePage/Screens/rate_page.dart';
 
@@ -148,7 +145,7 @@ class _NavigationBarState extends ConsumerState<NavigationBarScreen> {
 
   void _launchWhatsApp() async {
     final Uri url = Uri.parse(
-        'https://wa.me/+9710565203515'); // Replace with your WhatsApp link
+        'https://wa.me/+971586822529'); // Replace with your WhatsApp link
     if (!await launchUrl(url)) {
       throw 'Could not launch $url';
     }

@@ -140,7 +140,7 @@ class _ProfileScreen2State extends ConsumerState<ProfileScreen2> {
                     context,
                     FontAwesomeIcons.whatsapp,
                     'WhatsApp',
-                    '+971 586822529',
+                    '+971586822529',
                     _launchWhatsApp,
                   ),
                   _buildCard(
@@ -154,7 +154,7 @@ class _ProfileScreen2State extends ConsumerState<ProfileScreen2> {
                     context,
                     FontAwesomeIcons.phone,
                     'Call Us',
-                    '+971 42940997 ',
+                    '+97142940997',
                     _launchContact,
                   ),
                   _buildCard(
