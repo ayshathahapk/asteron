@@ -84,7 +84,9 @@ class _RatePageState extends ConsumerState<RatePage> {
                           data: (data) {
                             final spreadNow = data!.info;
                             return Text(
-                              "${liveRateData!.gold!.bid + (spreadNow.goldBidSpread)}",
+                              (liveRateData!.gold!.bid +
+                                      (spreadNow.goldBidSpread))
+                                  .toStringAsFixed(2),
                               style: CustomPoppinsTextStyles.bodyText1White,
                             );
                           },
@@ -101,6 +103,15 @@ class _RatePageState extends ConsumerState<RatePage> {
                             );
                           },
                         );
+                        // final spreadNow = ref1.watch(spreadDataProvider2);
+                        // final liveRateData = ref1.watch(liveRateProvider);
+                        // ref1.watch(rateBidValue);
+                        // final res = ref1.watch(spreadDataProvider2);
+                        // return Text(
+                        //   res.toString(),
+                        //   // "\$${(liveRateData?.gold.bid ?? 0 + (spreadNow?.editedBidSpreadValue ?? 0)).toStringAsFixed(2)}",
+                        //   style: CustomPoppinsTextStyles.bodyText1White,
+                        // );
                       },
                     ),
                   ],

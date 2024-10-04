@@ -8,59 +8,59 @@ String bankDetailsModelToMap(BankDetailsModel data) =>
 
 class BankDetailsModel {
   final bool success;
-  final Commodities commodities;
+  final BankInfo bankInfo;
   final String message;
 
   BankDetailsModel({
     required this.success,
-    required this.commodities,
+    required this.bankInfo,
     required this.message,
   });
 
   BankDetailsModel copyWith({
     bool? success,
-    Commodities? commodities,
+    BankInfo? bankInfo,
     String? message,
   }) =>
       BankDetailsModel(
         success: success ?? this.success,
-        commodities: commodities ?? this.commodities,
+        bankInfo: bankInfo ?? this.bankInfo,
         message: message ?? this.message,
       );
 
   factory BankDetailsModel.fromMap(Map<String, dynamic> json) =>
       BankDetailsModel(
         success: json["success"],
-        commodities: Commodities.fromMap(json["commodities"]),
+        bankInfo: BankInfo.fromMap(json["bankInfo"]),
         message: json["message"],
       );
 
   Map<String, dynamic> toMap() => {
         "success": success,
-        "commodities": commodities.toMap(),
+        "bankInfo": bankInfo.toMap(),
         "message": message,
       };
 }
 
-class Commodities {
+class BankInfo {
   final String id;
   final List<BankDetail> bankDetails;
 
-  Commodities({
+  BankInfo({
     required this.id,
     required this.bankDetails,
   });
 
-  Commodities copyWith({
+  BankInfo copyWith({
     String? id,
     List<BankDetail>? bankDetails,
   }) =>
-      Commodities(
+      BankInfo(
         id: id ?? this.id,
         bankDetails: bankDetails ?? this.bankDetails,
       );
 
-  factory Commodities.fromMap(Map<String, dynamic> json) => Commodities(
+  factory BankInfo.fromMap(Map<String, dynamic> json) => BankInfo(
         id: json["_id"],
         bankDetails: List<BankDetail>.from(
             json["bankDetails"].map((x) => BankDetail.fromMap(x))),
@@ -127,17 +127,17 @@ class BankDetail {
       );
 
   factory BankDetail.fromMap(Map<String, dynamic> json) => BankDetail(
-        holderName: json["holderName"],
-        bankName: json["bankName"],
-        accountNumber: json["accountNumber"],
-        iban: json["iban"],
-        ifsc: json["ifsc"],
-        swift: json["swift"],
-        branch: json["branch"],
-        city: json["city"],
-        country: json["country"],
-        logo: json["logo"],
-        id: json["_id"],
+        holderName: json["holderName"] ?? "",
+        bankName: json["bankName"] ?? "",
+        accountNumber: json["accountNumber"] ?? "",
+        iban: json["iban"] ?? "",
+        ifsc: json["ifsc"] ?? "",
+        swift: json["swift"] ?? "",
+        branch: json["branch"] ?? "",
+        city: json["city"] ?? "",
+        country: json["country"] ?? "",
+        logo: json["logo"] ?? "",
+        id: json["_id"] ?? "",
       );
 
   Map<String, dynamic> toMap() => {

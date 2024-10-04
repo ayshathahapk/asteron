@@ -61,7 +61,7 @@ class CommodityList extends ConsumerWidget {
                         ),
 
                         SizedBox(
-                          width: 82.v,
+                          width: 60.v,
                           child: Center(
                             child: Text(
                               "UNIT",
@@ -150,7 +150,7 @@ class CommodityList extends ConsumerWidget {
                                         // ),
 
                                         SizedBox(
-                                          width: 82.v,
+                                          width: 60.v,
                                           child: Center(
                                             child: Text(
                                               commodities.unit.toString() +
@@ -268,7 +268,7 @@ class CommodityList extends ConsumerWidget {
                                         // ),
 
                                         SizedBox(
-                                          width: 82.v,
+                                          width: 60.v,
                                           child: Center(
                                             child: Text(
                                               commodities.unit.toString() +
@@ -388,7 +388,7 @@ class CommodityList extends ConsumerWidget {
                                         // ),
 
                                         SizedBox(
-                                          width: 82.v,
+                                          width: 60.v,
                                           child: Center(
                                             child: Text(
                                               commodities.unit.toString() +

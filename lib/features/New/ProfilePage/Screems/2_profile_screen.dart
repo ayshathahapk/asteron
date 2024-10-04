@@ -107,7 +107,7 @@ class _ProfileScreen2State extends ConsumerState<ProfileScreen2> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(10.h),
+        padding: EdgeInsets.only(top: 10.h, left: 18.h, right: 18.h),
         width: SizeUtils.width,
         height: SizeUtils.height,
         color: appTheme.mainBlue,
