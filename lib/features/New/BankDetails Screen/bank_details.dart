@@ -38,7 +38,7 @@ class _DetailsState extends ConsumerState<Details> {
     var data = json.encode({"request": "Request for bankDetails"});
     var dio = Dio();
     var response = await dio.request(
-      'https://api.aurify.ae/user/request-admin/66e126df82676ef03e517753',
+      '${FirebaseConstants.baseUrl}request-admin/${FirebaseConstants.adminId}',
       options: Options(
         method: 'POST',
         headers: headers,
