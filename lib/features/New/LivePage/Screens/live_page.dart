@@ -779,18 +779,15 @@ class _LivePageState extends ConsumerState<LivePage> {
             width: 110.h,
           ),
         ),
-        Positioned(
-          top: 15.v,
-          right: 50.h,
-          child: Transform.rotate(
-            angle: -Math.pi / 4,
-            child: Consumer(
-              builder: (context, refBanner, child) {
-                return Visibility(
-                  // visible: true,
-                  visible: refBanner.watch(bannerBool),
-
-                  child: Container(
+        if (ref.watch(bannerBool))
+          Positioned(
+            top: 15.v,
+            right: 50.h,
+            child: Transform.rotate(
+              angle: -Math.pi / 4,
+              child: Consumer(
+                builder: (context, refBanner, child) {
+                  return Container(
                     width: SizeUtils.width,
                     height: 30.h,
                     color: Colors.red,
@@ -803,19 +800,11 @@ class _LivePageState extends ConsumerState<LivePage> {
                         style: CustomPoppinsTextStyles.buttonText,
                       ),
                     ),
-                  ),
-                  // visible: refBanner.watch(bannerBool),
-                  // child: RunningTextBanner(
-                  //   text: getMarketStatus(),
-                  //   textStyle:
-                  //       CustomPoppinsTextStyles.titleSmallWhiteA700SemiBold_1,
-                  //   speed: const Duration(seconds: 15),
-                  // ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ),
       ],
     );
   }
