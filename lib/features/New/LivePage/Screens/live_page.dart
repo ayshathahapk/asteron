@@ -20,7 +20,6 @@ import 'dart:math' as Math;
 
 import '../Repository/live_repository.dart';
 import 'commodity_list.dart';
-import 'live_rate_widget.dart';
 
 final rateBidValue = StateProvider(
   (ref) {
@@ -47,7 +46,15 @@ class _LivePageState extends ConsumerState<LivePage> {
   final formattedTimeProvider = StateProvider(
     (ref) => DateFormat('h:mm a').format(DateTime.now()),
   );
-
+  final bdTimeProvider = StateProvider(
+    (ref) => "",
+  );
+  final uaeTimeProvider = StateProvider(
+    (ref) => "",
+  );
+  final usTimeProvider = StateProvider(
+    (ref) => "",
+  );
   @override
   void initState() {
     super.initState();
@@ -56,6 +63,7 @@ class _LivePageState extends ConsumerState<LivePage> {
       const Duration(minutes: 1),
       (timer) {
         _updateTime(timer);
+        convertTimes(timer);
       },
     );
   }
@@ -72,6 +80,23 @@ class _LivePageState extends ConsumerState<LivePage> {
         );
   }
 
+  double getUnitMultiplier(String weight) {
+    switch (weight) {
+      case "GM":
+        return 1;
+      case "KG":
+        return 1000;
+      case "TTB":
+        return 116.6400;
+      case "TOLA":
+        return 11.664;
+      case "OZ":
+        return 31.1034768;
+      default:
+        return 1;
+    }
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -82,6 +107,41 @@ class _LivePageState extends ConsumerState<LivePage> {
     final location = tz.getLocation(timeZone);
     final tz.TZDateTime tzDateTime = tz.TZDateTime.from(dateTime, location);
     return tzDateTime;
+  }
+
+  String ukTimeString = "";
+  String bdTimeString = "";
+  String inTimeString = "";
+  String uaeTimeString = "";
+  void convertTimes(Timer timer) {
+    // Example timezones
+    const String ukTimeZone = 'America/New_York';
+    const String bdTimeZone = 'Asia/Dhaka';
+    const String currentTimeZone = 'Asia/Kolkata';
+    const String uaeTimeZone = 'Asia/Dubai';
+
+    // Current time in your local timezone
+    DateTime now = DateTime.now();
+
+    // Convert to UK and Bangladesh time
+    DateTime ukTime = convertToTimeZone(now, ukTimeZone);
+    DateTime bdTime = convertToTimeZone(now, bdTimeZone);
+    DateTime localTime = convertToTimeZone(now, currentTimeZone);
+    DateTime uaeTime = convertToTimeZone(now, uaeTimeZone);
+    // Format the time as needed
+    ukTimeString = DateFormat('h:mm:ss a\nEEEE').format(ukTime);
+    bdTimeString = DateFormat('h:mm:ss a\nEEEE').format(bdTime);
+    inTimeString = DateFormat('h:mm:ss a\nEEEE').format(localTime);
+    uaeTimeString = DateFormat('h:mm:ss a\nEEEE').format(uaeTime);
+    ref.read(bdTimeProvider.notifier).update(
+          (state) => bdTimeString,
+        );
+    ref.read(usTimeProvider.notifier).update(
+          (state) => ukTimeString,
+        );
+    ref.read(uaeTimeProvider.notifier).update(
+          (state) => uaeTimeString,
+        );
   }
 
   final bannerBool = StateProvider.autoDispose(
@@ -128,9 +188,9 @@ class _LivePageState extends ConsumerState<LivePage> {
     final liveRateData = ref.watch(liveRateProvider);
     return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(left: 8.h, right: 8.h),
+        SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,6 +211,10 @@ class _LivePageState extends ConsumerState<LivePage> {
                               .toUpperCase(),
                           style: CustomPoppinsTextStyles.bodyText)
                     ],
+                  ),
+                  CustomImageView(
+                    imagePath: ImageConstants.logo,
+                    width: 90.h,
                   ),
                   Column(
                     children: [
@@ -217,8 +281,8 @@ class _LivePageState extends ConsumerState<LivePage> {
                     data: (spotRate) {
                       if (spotRate != null) {
                         if (liveRateData != null &&
-                            liveRateData.gold != null &&
-                            liveRateData.silver != null) {
+                        liveRateData.gold !=null&&
+                        liveRateData.silver !=null) {
                           final spreadNow = spotRate.info;
                           WidgetsBinding.instance.addPostFrameCallback(
                             (timeStamp) {
@@ -256,179 +320,169 @@ class _LivePageState extends ConsumerState<LivePage> {
                           );
                           return Column(
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.black38,
-                                    borderRadius: BorderRadius.circular(10.v)),
-                                width: SizeUtils.width,
-                                height: SizeUtils.height * 0.1,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Gold",
-                                          style: CustomPoppinsTextStyles
-                                              .bodyTextGold),
-                                      TextSpan(
-                                          text: "OZ",
-                                          style: GoogleFonts.poppins(
-                                              // fontFamily: marine,
-                                              color: appTheme.gold,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15.fSize))
-                                    ])),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ValueDisplayWidget(
-                                          value: (liveRateData.gold!.bid +
-                                              (spreadNow.goldBidSpread)),
-                                          // value: ref1.watch(goldAskPrice),
-                                          // value: (liveRateData.gold.bid +
-                                          //     (spreadNow?.editedBidSpreadValue ??
-                                          //         0))
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_down_fill,
-                                              color: appTheme.red700,
-                                              size: 20.v,
-                                            ),
-                                            Text(
-                                              "${liveRateData.gold!.low + (spreadNow.goldLowMargin)}",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ValueDisplayWidget2(
-                                          value: (liveRateData.gold!.bid +
-                                              (spreadNow.goldAskSpread) +
-                                              (spreadNow.goldBidSpread) +
-                                              0.5),
-                                          // value: ref1.watch(silverAskPrice),
-                                          // value: (liveRateData.gold.bid +
-                                          //     (spreadNow?.editedBidSpreadValue ??
-                                          //         0) +
-                                          //     (spreadNow?.editedAskSpreadValue ??
-                                          //         0) +
-                                          //     0.5)
-                                        ),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_up_fill,
-                                              color: appTheme.mainGreen,
-                                              size: 20.v,
-                                            ),
-                                            Text(
-                                              "${liveRateData.gold?.high ?? 0 + (spreadNow.goldHighMargin)}",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
+                              Card(
+                                color: Colors.transparent,
+                                child: SizedBox(
+                                  width: SizeUtils.width,
+                                  height: SizeUtils.height * 0.1,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "Gold",
+                                            style: CustomPoppinsTextStyles
+                                                .bodyTextGold),
+                                        TextSpan(
+                                            text: "OZ",
+                                            style: GoogleFonts.poppins(
+                                                // fontFamily: marine,
+                                                color: appTheme.gold,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 15.fSize))
+                                      ])),
+                                      Column(
+                                        children: [
+                                          ValueDisplayWidget(
+                                            value: (liveRateData.gold!.bid +
+                                                (spreadNow.goldBidSpread)),
+                                            // value: ref1.watch(goldAskPrice),
+                                            // value: (liveRateData.gold.bid +
+                                            //     (spreadNow?.editedBidSpreadValue ??
+                                            //         0))
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .arrowtriangle_down_fill,
+                                                color: appTheme.red700,
+                                              ),
+                                              Text(
+                                                "${liveRateData.gold!.low + (spreadNow.goldLowMargin)}",
+                                                style: CustomPoppinsTextStyles
+                                                    .bodyTextSemiBold,
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          ValueDisplayWidget2(
+                                            value: liveRateData.gold!.bid +
+                                                spreadNow.goldBidSpread +
+                                                spreadNow.goldAskSpread +
+                                                0.5,
+                                            // value: ref1.watch(silverAskPrice),
+                                            // value: (liveRateData.gold.bid +
+                                            //     (spreadNow?.editedBidSpreadValue ??
+                                            //         0) +
+                                            //     (spreadNow?.editedAskSpreadValue ??
+                                            //         0) +
+                                            //     0.5)
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .arrowtriangle_up_fill,
+                                                color: appTheme.mainGreen,
+                                              ),
+                                              Text(
+                                                "${liveRateData.gold!.high + (spreadNow.goldHighMargin)}",
+                                                style: CustomPoppinsTextStyles
+                                                    .bodyTextSemiBold,
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               space(),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.black38,
-                                    borderRadius: BorderRadius.circular(10.v)),
-                                width: SizeUtils.width,
-                                height: SizeUtils.height * 0.1,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Silver",
-                                          style: CustomPoppinsTextStyles
-                                              .bodyTextGold),
-                                      TextSpan(
-                                          text: "OZ",
-                                          style: GoogleFonts.poppins(
-                                              // fontFamily: marine,
-                                              color: appTheme.gold,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15.fSize))
-                                    ])),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ValueDisplayWidgetSilver1(
-                                            // value: 0,
-                                            value: (liveRateData.silver?.bid ??
-                                                0 +
-                                                    (spreadNow
-                                                            .silverBidSpread ??
-                                                        0))),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_down_fill,
-                                              color: appTheme.red700,
-                                              size: 20.v,
-                                            ),
-                                            Text(
-                                              "${liveRateData.silver?.low ?? 0 + (spreadNow.silverLowMargin)}",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ValueDisplayWidgetSilver2(
-                                            // value: 0,
-                                            value: ((liveRateData.silver!.bid +
-                                                (spreadNow.silverBidSpread) +
-                                                (spreadNow.silverAskSpread) +
-                                                0.05))),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_up_fill,
-                                              color: appTheme.mainGreen,
-                                              size: 20.v,
-                                            ),
-                                            Text(
-                                              "${liveRateData.silver?.high ?? 0 + (spreadNow.silverHighMargin)}",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
+                              Card(
+                                color: Colors.transparent,
+                                child: SizedBox(
+                                  width: SizeUtils.width,
+                                  height: SizeUtils.height * 0.1,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "Silver",
+                                            style: CustomPoppinsTextStyles
+                                                .bodyTextGold),
+                                        TextSpan(
+                                            text: "OZ",
+                                            style: GoogleFonts.poppins(
+                                                // fontFamily: marine,
+                                                color: appTheme.gold,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 15.fSize))
+                                      ])),
+                                      Column(
+                                        children: [
+                                          ValueDisplayWidgetSilver1(
+                                              // value: 0,
+                                              value: (liveRateData.silver!.bid +
+                                                  (spreadNow.silverBidSpread ??
+                                                      0))),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .arrowtriangle_down_fill,
+                                                color: appTheme.red700,
+                                              ),
+                                              Text(
+                                                "${liveRateData.silver!.low + (spreadNow.silverLowMargin)}",
+                                                style: CustomPoppinsTextStyles
+                                                    .bodyTextSemiBold,
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          ValueDisplayWidgetSilver2(
+                                              // value: 0,
+                                              value: (liveRateData.silver!.bid +
+                                                  (spreadNow.silverBidSpread ??
+                                                      0) +
+                                                  (spreadNow.silverAskSpread ??
+                                                      0) +
+                                                  0.05)),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .arrowtriangle_up_fill,
+                                                color: appTheme.mainGreen,
+                                              ),
+                                              Text(
+                                                "${liveRateData.silver!.high + (spreadNow.silverHighMargin)}",
+                                                style: CustomPoppinsTextStyles
+                                                    .bodyTextSemiBold,
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               space(),
@@ -742,7 +796,6 @@ class _LivePageState extends ConsumerState<LivePage> {
                   slverPrice: ref2.watch(silverAskPrice),
                 ),
               ),
-              space(),
               Consumer(
                 builder: (context, ref1, child) {
                   return ref1.watch(newsProvider).when(
@@ -772,42 +825,368 @@ class _LivePageState extends ConsumerState<LivePage> {
             ],
           ),
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: CustomImageView(
-            imagePath: ImageConstants.logo,
-            width: 110.h,
-          ),
-        ),
-        if (ref.watch(bannerBool))
-          Positioned(
-            top: 15.v,
-            right: 50.h,
-            child: Transform.rotate(
-              angle: -Math.pi / 4,
-              child: Consumer(
-                builder: (context, refBanner, child) {
-                  return Container(
+        Positioned(
+          top: 15.v,
+          right: 50.h,
+          child: Transform.rotate(
+            angle: -Math.pi / 4,
+            child: Consumer(
+              builder: (context, refBanner, child) {
+                return Visibility(
+                  visible: false,
+                  // visible: refBanner.watch(bannerBool),
+
+                  child: Container(
                     width: SizeUtils.width,
                     height: 30.h,
                     color: Colors.red,
                     child: Center(
                       child: AutoScrollText(
                         delayBefore: const Duration(seconds: 3),
-                        "           Market is closed. It will open soon!            ",
-                        // getMarketStatus(),
-                        // "qweweererfdszfszdfgfgszfgszfgvzxgvxzgvzxfgxfgvxfdzv",
+                        "qweweererfdszfszdfgfgszfgszfgvzxgvxzgvzxfgxfgvxfdzv",
                         style: CustomPoppinsTextStyles.buttonText,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                  // visible: refBanner.watch(bannerBool),
+                  // child: RunningTextBanner(
+                  //   text: getMarketStatus(),
+                  //   textStyle:
+                  //       CustomPoppinsTextStyles.titleSmallWhiteA700SemiBold_1,
+                  //   speed: const Duration(seconds: 15),
+                  // ),
+                );
+              },
             ),
           ),
+        ),
       ],
     );
   }
 }
 
 ///
+
+class ValueDisplayWidgetSilver1 extends StatefulWidget {
+  final double value;
+
+  const ValueDisplayWidgetSilver1({super.key, required this.value});
+
+  @override
+  _ValueDisplayWidgetSilver1State createState() =>
+      _ValueDisplayWidgetSilver1State();
+}
+
+class _ValueDisplayWidgetSilver1State extends State<ValueDisplayWidgetSilver1> {
+  Color _containerColor = Colors.white;
+  Timer? _debounceTimer;
+  double _lastValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(ValueDisplayWidgetSilver1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _updateColor();
+    }
+  }
+
+  void _updateColor() {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      setState(() {
+        if (widget.value > _lastValue) {
+          _containerColor = appTheme.mainGreen;
+        } else if (widget.value < _lastValue) {
+          _containerColor = appTheme.red700;
+        } else {
+          _containerColor = appTheme.mainWhite;
+        }
+        _lastValue = widget.value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      // color: _containerColor,
+      height: 50.v,
+      width: 120.v,
+      decoration: BoxDecoration(
+          color: _containerColor,
+          // color: godLow == godBid
+          //     ? appTheme.mainWhite
+          //     : godLow < godBid
+          //         ? appTheme.red700
+          //         : appTheme.mainGreen,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: appTheme.gray500)),
+      child: Center(
+        child: Text(
+          widget.value.toStringAsFixed(4),
+          style: CustomPoppinsTextStyles.bodyText2,
+        ),
+      ),
+    );
+  }
+}
+
+///
+
+class ValueDisplayWidgetSilver2 extends StatefulWidget {
+  final double value;
+
+  const ValueDisplayWidgetSilver2({super.key, required this.value});
+
+  @override
+  _ValueDisplayWidgetSilver2State createState() =>
+      _ValueDisplayWidgetSilver2State();
+}
+
+class _ValueDisplayWidgetSilver2State extends State<ValueDisplayWidgetSilver2> {
+  Color _containerColor = Colors.white;
+  Timer? _debounceTimer;
+  double _lastValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(ValueDisplayWidgetSilver2 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _updateColor();
+    }
+  }
+
+  void _updateColor() {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      setState(() {
+        if (widget.value > _lastValue) {
+          _containerColor = appTheme.mainGreen;
+        } else if (widget.value < _lastValue) {
+          _containerColor = appTheme.red700;
+        } else {
+          _containerColor = appTheme.mainWhite;
+        }
+        _lastValue = widget.value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      // color: _containerColor,
+      height: 50.v,
+      width: 120.v,
+      decoration: BoxDecoration(
+          color: _containerColor,
+          // color: godLow == godBid
+          //     ? appTheme.mainWhite
+          //     : godLow < godBid
+          //         ? appTheme.red700
+          //         : appTheme.mainGreen,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: appTheme.gray500)),
+      child: Center(
+        child: Text(
+          widget.value.toStringAsFixed(4),
+          style: CustomPoppinsTextStyles.bodyText2,
+        ),
+      ),
+    );
+  }
+}
+
+///
+
+class ValueDisplayWidget extends StatefulWidget {
+  final double value;
+
+  const ValueDisplayWidget({Key? key, required this.value}) : super(key: key);
+
+  @override
+  _ValueDisplayWidgetState createState() => _ValueDisplayWidgetState();
+}
+
+class _ValueDisplayWidgetState extends State<ValueDisplayWidget> {
+  Color _containerColor = Colors.white;
+  Timer? _debounceTimer;
+  double _lastValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(ValueDisplayWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _updateColor();
+    }
+  }
+
+  void _updateColor() {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      setState(() {
+        if (widget.value > _lastValue) {
+          _containerColor = appTheme.mainGreen;
+        } else if (widget.value < _lastValue) {
+          _containerColor = appTheme.red700;
+        } else {
+          _containerColor = appTheme.mainWhite;
+        }
+        _lastValue = widget.value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      // color: _containerColor,
+      height: 50.v,
+      width: 120.v,
+      decoration: BoxDecoration(
+          color: _containerColor,
+          // color: godLow == godBid
+          //     ? appTheme.mainWhite
+          //     : godLow < godBid
+          //         ? appTheme.red700
+          //         : appTheme.mainGreen,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: appTheme.gray500)),
+      child: Center(
+        child: Text(
+          widget.value.toStringAsFixed(2),
+          style: CustomPoppinsTextStyles.bodyText2,
+        ),
+      ),
+    );
+  }
+}
+
+///
+
+class ValueDisplayWidget2 extends StatefulWidget {
+  final double value;
+
+  const ValueDisplayWidget2({Key? key, required this.value}) : super(key: key);
+
+  @override
+  _ValueDisplayWidget2State createState() => _ValueDisplayWidget2State();
+}
+
+class _ValueDisplayWidget2State extends State<ValueDisplayWidget2> {
+  Color _containerColor = Colors.white;
+  Timer? _debounceTimer;
+  double _lastValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastValue = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(ValueDisplayWidget2 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _updateColor();
+    }
+  }
+
+  void _updateColor() {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      setState(() {
+        if (widget.value > _lastValue) {
+          _containerColor = appTheme.mainGreen;
+        } else if (widget.value < _lastValue) {
+          _containerColor = appTheme.red700;
+        } else {
+          _containerColor = appTheme.mainWhite;
+        }
+        _lastValue = widget.value;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      // color: _containerColor,
+      height: 50.v,
+      width: 120.v,
+      decoration: BoxDecoration(
+          color: _containerColor,
+          // color: godLow == godBid
+          //     ? appTheme.mainWhite
+          //     : godLow < godBid
+          //         ? appTheme.red700
+          //         : appTheme.mainGreen,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: appTheme.gray500)),
+      child: Center(
+        child: Text(
+          widget.value.toStringAsFixed(2),
+          style: CustomPoppinsTextStyles.bodyText2,
+        ),
+      ),
+    );
+  }
+}

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
 import 'features/New/NavigationBar/navigation_bar.dart';
-import 'features/bottom.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
