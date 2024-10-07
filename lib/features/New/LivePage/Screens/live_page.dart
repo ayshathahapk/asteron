@@ -833,7 +833,7 @@ class _LivePageState extends ConsumerState<LivePage> {
             child: Consumer(
               builder: (context, refBanner, child) {
                 return Visibility(
-                  visible: true,
+                  visible: false,
                   // visible: refBanner.watch(bannerBool),
 
                   child: Container(
