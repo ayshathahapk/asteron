@@ -38,7 +38,7 @@ class _DetailsState extends ConsumerState<Details> {
     var data = json.encode({"request": "Request for bankDetails"});
     var dio = Dio();
     var response = await dio.request(
-      'https://api.aurify.ae/user/request-admin/66e126df82676ef03e517753',
+      '${FirebaseConstants.baseUrl}request-admin/${FirebaseConstants.adminId}',
       options: Options(
         method: 'POST',
         headers: headers,
@@ -74,7 +74,7 @@ class _DetailsState extends ConsumerState<Details> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          padding: EdgeInsets.all(8.v),
+          padding: EdgeInsets.only(left: 18.v, right: 18.v),
           height: SizeUtils.height,
           width: SizeUtils.width,
           color: appTheme.mainBlue,
@@ -82,10 +82,12 @@ class _DetailsState extends ConsumerState<Details> {
             controller: _controller,
             child: Column(
               children: [
+                space(),
                 Image.asset(
                   ImageConstants.logo,
                   width: SizeUtils.width * 0.30,
                 ),
+                space(),
                 Text(
                   DateFormat('MMM/dd/yyyy-h:mm:ss a').format(DateTime.now()),
                   style: const TextStyle(
@@ -105,26 +107,25 @@ class _DetailsState extends ConsumerState<Details> {
                           fontSize: 30,
                           fontWeight: FontWeight.bold),
                     )),
-                space(h: 30.v),
+                space(h: 20.v),
                 Consumer(
                   builder: (context, refBank, child) {
                     return refBank.watch(bankDetailsProvider).when(
                           data: (data) {
                             if (data != null) {
                               print("data Null alla");
-                              print(data.commodities.bankDetails);
-                              if (data.commodities.bankDetails.isNotEmpty) {
+                              print(data.bankInfo.bankDetails);
+                              if (data.bankInfo.bankDetails.isNotEmpty) {
                                 return Expanded(
                                   flex: 0,
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        data.commodities.bankDetails.length,
+                                    itemCount: data.bankInfo.bankDetails.length,
                                     itemBuilder: (context, index) {
                                       final bank =
-                                          data.commodities.bankDetails[index];
+                                          data.bankInfo.bankDetails[index];
                                       _acName.text = bank.accountNumber;
                                       _holderName.text = bank.holderName ?? "";
                                       _iban.text = bank.iban ?? "";
@@ -256,6 +257,7 @@ class _DetailsState extends ConsumerState<Details> {
                                 );
                               }
                             } else {
+                              print("Data Null annNNN#######");
                               return Padding(
                                 padding: EdgeInsets.all(8.0.h),
                                 child: Container(

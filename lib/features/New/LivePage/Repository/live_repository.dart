@@ -73,13 +73,21 @@ class LiveRateNotifier extends StateNotifier<LiveRateModel?> {
     _socket?.onConnect((_) async {
       print('Connected to WebSocket server');
       List<String> commodityArray = await fetchCommodityArray();
+
       _requestMarketData(commodityArray);
     });
 
     _socket?.on('market-data', (data) {
-      if (data != null && data['symbol'] != null) {
+      if (data is Map<String, dynamic> && data['symbol'] is String) {
         marketData[data['symbol']] = data;
-        state = LiveRateModel.fromJson(marketData);
+        try {
+          state = LiveRateModel.fromJson(marketData);
+        } catch (e) {
+          print("Error parsing market data: $e");
+          // Handle the error appropriately
+        }
+      } else {
+        print("Received invalid market data format");
       }
     });
 
@@ -90,7 +98,19 @@ class LiveRateNotifier extends StateNotifier<LiveRateModel?> {
   }
 
   void _requestMarketData(List<String> symbols) {
-    _socket?.emit('request-data', symbols);
+    // print("HERE IS THE SYMBOLS");
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    // print(symbols);
+    _socket?.emit('request-data', [symbols]);
   }
 
   @override

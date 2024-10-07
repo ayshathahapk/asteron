@@ -15,10 +15,6 @@ class BankController {
   final BankRepo _bankRepo;
   BankController({required BankRepo bankRepo}) : _bankRepo = bankRepo;
 
-  Stream<List<BankDetailsModel?>> getBankDetails() {
-    return _bankRepo.getBankDetails();
-  }
-
   Future<BankDetailsModel?> getBankDetailsNew() async {
     BankDetailsModel? spotRateModel;
     final res = await _bankRepo.getBankDetailsNew();

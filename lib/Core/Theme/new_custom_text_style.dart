@@ -62,7 +62,7 @@ class CustomPoppinsTextStyles {
       // fontFamily: marine,
       color: appTheme.whiteA700,
       fontWeight: FontWeight.w500,
-      fontSize: 20.fSize);
+      fontSize: 18.fSize);
   static final TextStyle bodyText2White = GoogleFonts.poppins(
       // fontFamily: marine,
       color: appTheme.whiteA700,

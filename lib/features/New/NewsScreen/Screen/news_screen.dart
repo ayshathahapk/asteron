@@ -28,7 +28,7 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
           width: SizeUtils.width,
           color: appTheme.mainBlue,
           child: Padding(
-            padding: const EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 30.h, left: 18.h, right: 18.h),
             child: Column(
               children: [
                 Image.asset(
