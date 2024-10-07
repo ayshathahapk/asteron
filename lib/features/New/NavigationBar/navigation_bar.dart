@@ -194,11 +194,6 @@ class _NavigationBarState extends ConsumerState<NavigationBarScreen> {
                 width: 30.adaptSize,
                 imagePath: ImageConstants.userLogo,
               ),
-              CustomImageView(
-                color: appTheme.mainBlue,
-                width: 30.adaptSize,
-                imagePath: ImageConstants.whatsapp,
-              ),
             ],
             color: appTheme.gold,
             buttonBackgroundColor: appTheme.gold,
@@ -215,8 +210,6 @@ class _NavigationBarState extends ConsumerState<NavigationBarScreen> {
                     return showBottomSheetScreen(context: context);
                   },
                 );
-              } else if (index == 3) {
-                _launchWhatsApp();
               } else {
                 _onItemTapped(index);
               }
