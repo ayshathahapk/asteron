@@ -133,7 +133,7 @@ class _ValueDisplayWidgetSilver1State extends State<ValueDisplayWidgetSilver1> {
           border: Border.all(color: appTheme.gray500)),
       child: Center(
         child: Text(
-          widget.value.toStringAsFixed(4),
+          widget.value.toStringAsFixed(2),
           style: CustomPoppinsTextStyles.bodyText2,
         ),
       ),
@@ -273,7 +273,7 @@ class _ValueDisplayWidgetSilver2State extends State<ValueDisplayWidgetSilver2> {
           border: Border.all(color: appTheme.gray500)),
       child: Center(
         child: Text(
-          widget.value.toStringAsFixed(4),
+          widget.value.toStringAsFixed(2),
           style: CustomPoppinsTextStyles.bodyText2,
         ),
       ),

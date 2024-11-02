@@ -186,311 +186,471 @@ class _LivePageState extends ConsumerState<LivePage> {
 
   @override
   Widget build(BuildContext context) {
-    final liveRateData = ref.watch(liveRateProvider);
     return Stack(
       children: [
-        SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Icon(
-                        CupertinoIcons.calendar,
-                        color: appTheme.whiteA700,
-                      ),
-                      Text(
-                        DateFormat("MMM dd yyyy").format(DateTime.now()),
-                        style: CustomPoppinsTextStyles.bodyText,
-                      ),
-                      Text(
-                          DateFormat("EEEE")
-                              .format(DateTime.now())
-                              .toUpperCase(),
-                          style: CustomPoppinsTextStyles.bodyText)
-                    ],
-                  ),
-                  CustomImageView(
-                    imagePath: ImageConstants.logo,
-                    width: 90.h,
-                  ),
-                  Column(
-                    children: [
-                      Icon(
-                        CupertinoIcons.time,
-                        color: appTheme.whiteA700,
-                      ),
-                      Consumer(
-                        builder: (context, ref, child) => Text(
-                          ref.watch(formattedTimeProvider),
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Icon(
+                          CupertinoIcons.calendar,
+                          color: appTheme.whiteA700,
+                        ),
+                        Text(
+                          DateFormat("MMM dd yyyy").format(DateTime.now()),
                           style: CustomPoppinsTextStyles.bodyText,
                         ),
-                      ),
-                      space()
-                    ],
-                  )
-                ],
-              ),
-              space(),
-              Container(
-                height: 55.h,
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                    width: 7,
-                    color: appTheme.gold,
-                  )),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15.v),
-                      bottomRight: Radius.circular(15.v)),
+                        Text(
+                            DateFormat("EEEE")
+                                .format(DateTime.now())
+                                .toUpperCase(),
+                            style: CustomPoppinsTextStyles.bodyText)
+                      ],
+                    ),
+                    CustomImageView(
+                      imagePath: ImageConstants.logo,
+                      width: 90.h,
+                    ),
+                    Column(
+                      children: [
+                        Icon(
+                          CupertinoIcons.time,
+                          color: appTheme.whiteA700,
+                        ),
+                        Consumer(
+                          builder: (context, ref, child) => Text(
+                            ref.watch(formattedTimeProvider),
+                            style: CustomPoppinsTextStyles.bodyText,
+                          ),
+                        ),
+                        space()
+                      ],
+                    )
+                  ],
                 ),
-                child: Container(
-                  height: 50.h,
+                space(),
+                Container(
+                  height: 55.h,
                   decoration: BoxDecoration(
-                    color: appTheme.mainBlue,
-                    borderRadius: BorderRadius.circular(15.v),
+                    border: Border(
+                        bottom: BorderSide(
+                      width: 7,
+                      color: appTheme.gold,
+                    )),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15.v),
+                        bottomRight: Radius.circular(15.v)),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      space(w: 50.h),
-                      Spacer(),
-                      Text(
-                        "BUY\$",
-                        style: CustomPoppinsTextStyles.bodyText1White,
-                      ),
-                      Spacer(),
-                      Text(
-                        "SELL\$",
-                        style: CustomPoppinsTextStyles.bodyText1White,
-                      ),
-                      space(w: 50.h)
-                    ],
+                  child: Container(
+                    height: 50.h,
+                    decoration: BoxDecoration(
+                      color: appTheme.mainBlue,
+                      borderRadius: BorderRadius.circular(15.v),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        space(w: 50.h),
+                        Spacer(),
+                        Text(
+                          "BUY\$",
+                          style: CustomPoppinsTextStyles.bodyText1White,
+                        ),
+                        Spacer(),
+                        Text(
+                          "SELL\$",
+                          style: CustomPoppinsTextStyles.bodyText1White,
+                        ),
+                        space(w: 50.h)
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              space(),
+                space(),
 
-              /// new
+                /// new
 
-              Consumer(
-                builder: (context, ref1, child) {
-                  return ref1.watch(spotRateProvider).when(
-                    data: (spotRate) {
-                      if (spotRate != null) {
-                        if (liveRateData != null &&
-                            liveRateData.gold != null &&
-                            liveRateData.silver != null) {
-                          final spreadNow = spotRate.info;
-                          WidgetsBinding.instance.addPostFrameCallback(
-                            (timeStamp) {
-                              ref1.read(bannerBool.notifier).update(
-                                (state) {
-                                  return liveRateData.gold!.marketStatus !=
-                                          "TRADEABLE"
-                                      ? true
-                                      : false;
-                                },
-                              );
-                              ref1.read(rateBidValue.notifier).update(
-                                (state) {
-                                  return liveRateData.gold!.bid +
-                                      (spreadNow.goldBidSpread);
-                                },
-                              );
-                              ref1.read(goldAskPrice.notifier).update(
-                                (state) {
-                                  final res = (liveRateData.gold!.bid +
-                                      (spreadNow.goldAskSpread));
-                                  return res;
-                                },
-                              );
-                              ref1.read(silverAskPrice.notifier).update(
-                                (state) {
-                                  final res = (liveRateData.gold!.bid +
-                                      (spreadNow.goldAskSpread) +
-                                      (spreadNow.goldBidSpread) +
-                                      0.5);
-                                  return res;
-                                },
-                              );
-                            },
-                          );
-                          return Column(
-                            children: [
-                              Card(
-                                color: Colors.transparent,
-                                child: SizedBox(
-                                  width: SizeUtils.width,
-                                  height: SizeUtils.height * 0.1,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      RichText(
-                                          text: TextSpan(children: [
-                                        TextSpan(
-                                            text: "Gold",
-                                            style: CustomPoppinsTextStyles
-                                                .bodyTextGold),
-                                        TextSpan(
-                                            text: "OZ",
-                                            style: GoogleFonts.poppins(
-                                                // fontFamily: marine,
-                                                color: appTheme.gold,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15.fSize))
-                                      ])),
-                                      Column(
-                                        children: [
-                                          ValueDisplayWidget(
-                                            value: (liveRateData.gold!.bid +
-                                                (spreadNow.goldBidSpread)),
-                                            // value: ref1.watch(goldAskPrice),
-                                            // value: (liveRateData.gold.bid +
-                                            //     (spreadNow?.editedBidSpreadValue ??
-                                            //         0))
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .arrowtriangle_down_fill,
-                                                color: appTheme.red700,
-                                              ),
-                                              Text(
-                                                "${liveRateData.gold!.low + (spreadNow.goldLowMargin)}",
-                                                style: CustomPoppinsTextStyles
-                                                    .bodyTextSemiBold,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          ValueDisplayWidget2(
-                                            value: liveRateData.gold!.bid +
-                                                spreadNow.goldBidSpread +
-                                                spreadNow.goldAskSpread +
-                                                0.5,
-                                            // value: ref1.watch(silverAskPrice),
-                                            // value: (liveRateData.gold.bid +
-                                            //     (spreadNow?.editedBidSpreadValue ??
-                                            //         0) +
-                                            //     (spreadNow?.editedAskSpreadValue ??
-                                            //         0) +
-                                            //     0.5)
-                                          ),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .arrowtriangle_up_fill,
-                                                color: appTheme.mainGreen,
-                                              ),
-                                              Text(
-                                                "${liveRateData.gold!.high + (spreadNow.goldHighMargin)}",
-                                                style: CustomPoppinsTextStyles
-                                                    .bodyTextSemiBold,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                Consumer(
+                  builder: (context, ref1, child) {
+                    return ref1.watch(spotRateProvider).when(
+                      data: (spotRate) {
+                        if (spotRate != null) {
+                          final liveRateData = ref1.watch(liveRateProvider);
+                          if (liveRateData != null &&
+                              liveRateData.gold != null &&
+                              liveRateData.silver != null) {
+                            final spreadNow = spotRate.info;
+                            WidgetsBinding.instance.addPostFrameCallback(
+                              (timeStamp) {
+                                ref1.read(bannerBool.notifier).update(
+                                  (state) {
+                                    return liveRateData.gold!.marketStatus !=
+                                            "TRADEABLE"
+                                        ? true
+                                        : false;
+                                  },
+                                );
+                                ref1.read(rateBidValue.notifier).update(
+                                  (state) {
+                                    return liveRateData.gold!.bid +
+                                        (spreadNow.goldBidSpread);
+                                  },
+                                );
+                                ref1.read(goldAskPrice.notifier).update(
+                                  (state) {
+                                    final res = (liveRateData.gold!.bid +
+                                        (spreadNow.goldAskSpread));
+                                    return res;
+                                  },
+                                );
+                                ref1.read(silverAskPrice.notifier).update(
+                                  (state) {
+                                    final res = (liveRateData.gold!.bid +
+                                        (spreadNow.goldAskSpread) +
+                                        (spreadNow.goldBidSpread) +
+                                        0.5);
+                                    return res;
+                                  },
+                                );
+                              },
+                            );
+                            return Column(
+                              children: [
+                                Card(
+                                  color: Colors.transparent,
+                                  child: SizedBox(
+                                    width: SizeUtils.width,
+                                    height: SizeUtils.height * 0.1,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(children: [
+                                          TextSpan(
+                                              text: "Gold",
+                                              style: CustomPoppinsTextStyles
+                                                  .bodyTextGold),
+                                          TextSpan(
+                                              text: "OZ",
+                                              style: GoogleFonts.poppins(
+                                                  // fontFamily: marine,
+                                                  color: appTheme.gold,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 15.fSize))
+                                        ])),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidget(
+                                              value: (liveRateData.gold!.bid +
+                                                  (spreadNow.goldBidSpread)),
+                                              // value: ref1.watch(goldAskPrice),
+                                              // value: (liveRateData.gold.bid +
+                                              //     (spreadNow?.editedBidSpreadValue ??
+                                              //         0))
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_down_fill,
+                                                  color: appTheme.red700,
+                                                ),
+                                                Text(
+                                                  "${liveRateData.gold!.low + (spreadNow.goldLowMargin)}",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidget2(
+                                              value: liveRateData.gold!.bid +
+                                                  spreadNow.goldBidSpread +
+                                                  spreadNow.goldAskSpread +
+                                                  0.5,
+                                              // value: ref1.watch(silverAskPrice),
+                                              // value: (liveRateData.gold.bid +
+                                              //     (spreadNow?.editedBidSpreadValue ??
+                                              //         0) +
+                                              //     (spreadNow?.editedAskSpreadValue ??
+                                              //         0) +
+                                              //     0.5)
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_up_fill,
+                                                  color: appTheme.mainGreen,
+                                                ),
+                                                Text(
+                                                  "${liveRateData.gold!.high + (spreadNow.goldHighMargin)}",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              space(),
-                              Card(
-                                color: Colors.transparent,
-                                child: SizedBox(
-                                  width: SizeUtils.width,
-                                  height: SizeUtils.height * 0.1,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      RichText(
-                                          text: TextSpan(children: [
-                                        TextSpan(
-                                            text: "Silver",
-                                            style: CustomPoppinsTextStyles
-                                                .bodyTextGold),
-                                        TextSpan(
-                                            text: "OZ",
-                                            style: GoogleFonts.poppins(
-                                                // fontFamily: marine,
-                                                color: appTheme.gold,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15.fSize))
-                                      ])),
-                                      Column(
-                                        children: [
-                                          ValueDisplayWidgetSilver1(
-                                              // value: 0,
-                                              value: (liveRateData.silver!.bid +
-                                                  (spreadNow.silverBidSpread ??
-                                                      0))),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .arrowtriangle_down_fill,
-                                                color: appTheme.red700,
-                                              ),
-                                              Text(
-                                                "${liveRateData.silver!.low + (spreadNow.silverLowMargin)}",
-                                                style: CustomPoppinsTextStyles
-                                                    .bodyTextSemiBold,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          ValueDisplayWidgetSilver2(
-                                              // value: 0,
-                                              value: (liveRateData.silver!.bid +
-                                                  (spreadNow.silverBidSpread ??
-                                                      0) +
-                                                  (spreadNow.silverAskSpread ??
-                                                      0) +
-                                                  0.05)),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .arrowtriangle_up_fill,
-                                                color: appTheme.mainGreen,
-                                              ),
-                                              Text(
-                                                "${liveRateData.silver!.high + (spreadNow.silverHighMargin)}",
-                                                style: CustomPoppinsTextStyles
-                                                    .bodyTextSemiBold,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                                space(),
+                                Card(
+                                  color: Colors.transparent,
+                                  child: SizedBox(
+                                    width: SizeUtils.width,
+                                    height: SizeUtils.height * 0.1,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(children: [
+                                          TextSpan(
+                                              text: "Silver",
+                                              style: CustomPoppinsTextStyles
+                                                  .bodyTextGold),
+                                          TextSpan(
+                                              text: "OZ",
+                                              style: GoogleFonts.poppins(
+                                                  // fontFamily: marine,
+                                                  color: appTheme.gold,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 15.fSize))
+                                        ])),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidgetSilver1(
+                                                // value: 0,
+                                                value: double.parse((liveRateData
+                                                            .silver!.bid +
+                                                        (spreadNow
+                                                                .silverBidSpread ??
+                                                            0))
+                                                    .toStringAsFixed(2))),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_down_fill,
+                                                  color: appTheme.red700,
+                                                ),
+                                                Text(
+                                                  (liveRateData.silver!.low +
+                                                          (spreadNow
+                                                              .silverLowMargin))
+                                                      .toStringAsFixed(2),
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidgetSilver2(
+                                                // value: 0,
+                                                value: double.parse((liveRateData
+                                                            .silver!.bid +
+                                                        (spreadNow
+                                                                .silverBidSpread ??
+                                                            0) +
+                                                        (spreadNow
+                                                                .silverAskSpread ??
+                                                            0) +
+                                                        0.05)
+                                                    .toStringAsFixed(2))),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_up_fill,
+                                                  color: appTheme.mainGreen,
+                                                ),
+                                                Text(
+                                                  (liveRateData.silver!.high +
+                                                          (spreadNow
+                                                              .silverHighMargin))
+                                                      .toStringAsFixed(2),
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              space(),
-                            ],
-                          );
+                                space(),
+                              ],
+                            );
+                          } else {
+                            print("Live rate is Null");
+                            return Column(
+                              children: [
+                                Card(
+                                  color: Colors.transparent,
+                                  child: SizedBox(
+                                    width: SizeUtils.width,
+                                    height: SizeUtils.height * 0.1,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(children: [
+                                          TextSpan(
+                                              text: "Gold",
+                                              style: CustomPoppinsTextStyles
+                                                  .bodyTextGold),
+                                          TextSpan(
+                                              text: "OZ",
+                                              style: GoogleFonts.poppins(
+                                                  // fontFamily: marine,
+                                                  color: appTheme.gold,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 15.fSize))
+                                        ])),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidget(value: 0.0),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_down_fill,
+                                                  color: appTheme.red700,
+                                                ),
+                                                Text(
+                                                  "0.0",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidget2(value: 0.0),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_up_fill,
+                                                  color: appTheme.mainGreen,
+                                                ),
+                                                Text(
+                                                  "0.0",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                space(),
+                                Card(
+                                  color: Colors.transparent,
+                                  child: SizedBox(
+                                    width: SizeUtils.width,
+                                    height: SizeUtils.height * 0.1,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        RichText(
+                                            text: TextSpan(children: [
+                                          TextSpan(
+                                              text: "Silver",
+                                              style: CustomPoppinsTextStyles
+                                                  .bodyTextGold),
+                                          TextSpan(
+                                              text: "OZ",
+                                              style: GoogleFonts.poppins(
+                                                  // fontFamily: marine,
+                                                  color: appTheme.gold,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 15.fSize))
+                                        ])),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidgetSilver1(
+                                                value: 0.0),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_down_fill,
+                                                  color: appTheme.red700,
+                                                ),
+                                                Text(
+                                                  "0.0",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            ValueDisplayWidgetSilver2(
+                                                value: 0.0),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_up_fill,
+                                                  color: appTheme.mainGreen,
+                                                ),
+                                                Text(
+                                                  "0.0",
+                                                  style: CustomPoppinsTextStyles
+                                                      .bodyTextSemiBold,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                space(),
+                              ],
+                            );
+                          }
                         } else {
-                          print("Live rate is Null");
+                          print("Spot rate is Null");
                           return Column(
                             children: [
                               Card(
@@ -632,235 +792,87 @@ class _LivePageState extends ConsumerState<LivePage> {
                             ],
                           );
                         }
-                      } else {
-                        print("Spot rate is Null");
-                        return Column(
-                          children: [
-                            Card(
-                              color: Colors.transparent,
-                              child: SizedBox(
-                                width: SizeUtils.width,
-                                height: SizeUtils.height * 0.1,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Gold",
-                                          style: CustomPoppinsTextStyles
-                                              .bodyTextGold),
-                                      TextSpan(
-                                          text: "OZ",
-                                          style: GoogleFonts.poppins(
-                                              // fontFamily: marine,
-                                              color: appTheme.gold,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15.fSize))
-                                    ])),
-                                    Column(
-                                      children: [
-                                        ValueDisplayWidget(value: 0.0),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_down_fill,
-                                              color: appTheme.red700,
-                                            ),
-                                            Text(
-                                              "0.0",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        ValueDisplayWidget2(value: 0.0),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_up_fill,
-                                              color: appTheme.mainGreen,
-                                            ),
-                                            Text(
-                                              "0.0",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            space(),
-                            Card(
-                              color: Colors.transparent,
-                              child: SizedBox(
-                                width: SizeUtils.width,
-                                height: SizeUtils.height * 0.1,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Silver",
-                                          style: CustomPoppinsTextStyles
-                                              .bodyTextGold),
-                                      TextSpan(
-                                          text: "OZ",
-                                          style: GoogleFonts.poppins(
-                                              // fontFamily: marine,
-                                              color: appTheme.gold,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15.fSize))
-                                    ])),
-                                    Column(
-                                      children: [
-                                        ValueDisplayWidgetSilver1(value: 0.0),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_down_fill,
-                                              color: appTheme.red700,
-                                            ),
-                                            Text(
-                                              "0.0",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        ValueDisplayWidgetSilver2(value: 0.0),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_up_fill,
-                                              color: appTheme.mainGreen,
-                                            ),
-                                            Text(
-                                              "0.0",
-                                              style: CustomPoppinsTextStyles
-                                                  .bodyTextSemiBold,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            space(),
-                          ],
+                      },
+                      error: (error, stackTrace) {
+                        print("###ERROR###");
+                        print(error.toString());
+                        print(stackTrace);
+                        return const Center(
+                          child: Text("Something Went Wrong"),
                         );
-                      }
-                    },
-                    error: (error, stackTrace) {
-                      print("###ERROR###");
-                      print(error.toString());
-                      print(stackTrace);
-                      return const Center(
-                        child: Text("Something Went Wrong"),
-                      );
-                    },
-                    loading: () {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  );
-                },
-              ),
-
-              Consumer(
-                builder: (context, ref2, child) => CommodityList(
-                  price: ref2.watch(goldAskPrice),
-                  slverPrice: ref2.watch(silverAskPrice),
+                      },
+                      loading: () {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+                  },
                 ),
-              ),
-              Consumer(
-                builder: (context, ref1, child) {
-                  return ref1.watch(newsProvider).when(
-                        data: (data123) {
-                          if (data123 != null) {
-                            return AutoScrollText(
-                              delayBefore: const Duration(seconds: 3),
-                              "${data123.news.news[0].description}                             ",
-                              style: CustomPoppinsTextStyles.bodyText,
-                            );
-                          } else {
-                            return Text(
-                              "NO News",
-                              style: CustomPoppinsTextStyles.bodyText,
-                            );
-                          }
-                        },
-                        error: (error, stackTrace) {
-                          print(stackTrace);
-                          print(error.toString());
-                          return SizedBox();
-                        },
-                        loading: () => SizedBox(),
-                      );
-                },
-              ),
-            ],
+
+                Consumer(
+                  builder: (context, ref2, child) => CommodityList(
+                    price: ref2.watch(goldAskPrice),
+                    slverPrice: ref2.watch(silverAskPrice),
+                  ),
+                ),
+                Consumer(
+                  builder: (context, ref1, child) {
+                    return ref1.watch(newsProvider).when(
+                          data: (data123) {
+                            if (data123 != null) {
+                              return AutoScrollText(
+                                delayBefore: const Duration(seconds: 3),
+                                "${data123.news.news[0].description}      ${data123.news.news[0].description}",
+                                style: CustomPoppinsTextStyles.bodyText,
+                              );
+                            } else {
+                              return AutoScrollText(
+                                delayBefore: const Duration(seconds: 3),
+                                "ASTERON    ASTERON   ASTERON   ASTERON   ASTERON   ASTERON",
+                                style: CustomPoppinsTextStyles.bodyText,
+                              );
+                            }
+                          },
+                          error: (error, stackTrace) {
+                            print(stackTrace);
+                            print(error.toString());
+                            return SizedBox();
+                          },
+                          loading: () => SizedBox(),
+                        );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-        Positioned(
-          top: 15.v,
-          right: 50.h,
-          child: Transform.rotate(
-            angle: -Math.pi / 4,
-            child: Consumer(
-              builder: (context, refBanner, child) {
-                return Visibility(
-                  visible: false,
-                  // visible: refBanner.watch(bannerBool),
-
-                  child: Container(
+        if (ref.watch(bannerBool))
+          Positioned(
+            top: 15.v,
+            right: 90.h,
+            child: Transform.rotate(
+              angle: -Math.pi / 4,
+              child: Consumer(
+                builder: (context, refBanner, child) {
+                  return Container(
                     width: SizeUtils.width,
                     height: 30.h,
                     color: Colors.red,
                     child: Center(
                       child: AutoScrollText(
                         delayBefore: const Duration(seconds: 3),
-                        "qweweererfdszfszdfgfgszfgszfgvzxgvxzgvzxfgxfgvxfdzv",
+                        "Market is closed. It will open soon!     Market is closed. It will open soon!",
+                        // getMarketStatus(),
+                        // "qweweererfdszfszdfgfgszfgszfgvzxgvxzgvzxfgxfgvxfdzv",
                         style: CustomPoppinsTextStyles.buttonText,
                       ),
                     ),
-                  ),
-                  // visible: refBanner.watch(bannerBool),
-                  // child: RunningTextBanner(
-                  //   text: getMarketStatus(),
-                  //   textStyle:
-                  //       CustomPoppinsTextStyles.titleSmallWhiteA700SemiBold_1,
-                  //   speed: const Duration(seconds: 15),
-                  // ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ),
       ],
     );
   }
