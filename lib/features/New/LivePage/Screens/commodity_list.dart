@@ -167,7 +167,7 @@ class CommodityList extends ConsumerWidget {
                                         Consumer(
                                           builder: (context, refSell, child) {
                                             final cat =
-                                                price + commodities.sellPremium;
+                                                price + commodities.buyPremium;
                                             final askNow =
                                                 (cat / 31.103) * 3.674;
                                             final rateNow = askNow *
@@ -181,7 +181,7 @@ class CommodityList extends ConsumerWidget {
                                                             (commodities.purity
                                                                     .toString())
                                                                 .length)) +
-                                                commodities.sellCharge;
+                                                commodities.buyCharge;
                                             return SizedBox(
                                               width: 85.v,
                                               child: Center(
@@ -285,7 +285,7 @@ class CommodityList extends ConsumerWidget {
                                         Consumer(
                                           builder: (context, refSell, child) {
                                             final cat =
-                                                price + commodities.sellPremium;
+                                                price + commodities.buyPremium;
                                             final askNow =
                                                 (cat / 31.103) * 3.674;
                                             final rateNow = askNow *
@@ -299,7 +299,7 @@ class CommodityList extends ConsumerWidget {
                                                             (commodities.purity
                                                                     .toString())
                                                                 .length)) +
-                                                commodities.sellCharge;
+                                                commodities.buyCharge;
                                             return SizedBox(
                                               width: 85.v,
                                               child: Center(
@@ -405,7 +405,7 @@ class CommodityList extends ConsumerWidget {
                                         Consumer(
                                           builder: (context, refSell, child) {
                                             final cat =
-                                                price + commodities.sellPremium;
+                                                price + commodities.buyPremium;
                                             final askNow =
                                                 (cat / 31.103) * 3.674;
                                             final rateNow = askNow *
@@ -419,7 +419,7 @@ class CommodityList extends ConsumerWidget {
                                                             (commodities.purity
                                                                     .toString())
                                                                 .length)) +
-                                                commodities.sellCharge;
+                                                commodities.buyCharge;
                                             return SizedBox(
                                               width: 85.v,
                                               child: Center(
