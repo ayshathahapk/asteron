@@ -311,9 +311,10 @@ class _ProfileScreen2State extends ConsumerState<ProfileScreen2> {
                                   context,
                                   FontAwesomeIcons.whatsapp,
                                   'WhatsApp',
-                                  '+971503961445',
+                                  FirebaseConstants.whatsapp,
                                   () {
-                                    _launchWhatsApp(whNo: "971503961445");
+                                    _launchWhatsApp(
+                                        whNo: FirebaseConstants.whatsapp);
                                   },
                                 ),
                                 _buildCard(
@@ -322,17 +323,17 @@ class _ProfileScreen2State extends ConsumerState<ProfileScreen2> {
                                   'Mail',
                                   'Drop us a line',
                                   () {
-                                    _launchMail(
-                                        email: "goldking.info@gmail.com");
+                                    _launchMail(email: FirebaseConstants.mail);
                                   },
                                 ),
                                 _buildCard(
                                   context,
                                   FontAwesomeIcons.phone,
                                   'Call Us',
-                                  '+971503961445',
+                                  FirebaseConstants.phone,
                                   () {
-                                    _launchContact(phone: "971503961445");
+                                    _launchContact(
+                                        phone: FirebaseConstants.phone);
                                   },
                                 ),
                                 _buildCard(
