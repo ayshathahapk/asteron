@@ -1,4 +1,6 @@
 import 'package:asteron/Core/app_export.dart';
+import 'package:asteron/features/New/Graphs%20&%20Analytics%20MPF/sumbol_graph.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,7 +79,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
 Widget showBottomSheetScreen({required BuildContext context}) {
   return SizedBox(
-    height: SizeUtils.height * 0.2,
+    height: SizeUtils.height * 0.23,
     width: SizeUtils.width,
     child: ListView(
       padding: EdgeInsets.all(10),
@@ -92,10 +94,10 @@ Widget showBottomSheetScreen({required BuildContext context}) {
           },
           child: Row(
             children: [
-              CustomImageView(
-                imagePath: ImageConstants.personIcon,
-                width: 30.v,
-                color: appTheme.gray800,
+              Icon(
+                FluentIcons.person_32_regular,
+                color: appTheme.black900,
+                size: 30.v,
               ),
               Text(
                 "  Profile",
@@ -119,10 +121,10 @@ Widget showBottomSheetScreen({required BuildContext context}) {
           },
           child: Row(
             children: [
-              CustomImageView(
-                imagePath: ImageConstants.newsIcon,
-                width: 30.v,
-                color: appTheme.gray800,
+              Icon(
+                FluentIcons.news_28_regular,
+                color: appTheme.black900,
+                size: 30.v,
               ),
               Text(
                 "  News",
@@ -146,13 +148,40 @@ Widget showBottomSheetScreen({required BuildContext context}) {
           },
           child: Row(
             children: [
-              CustomImageView(
-                imagePath: ImageConstants.bankIcon,
-                width: 30.v,
-                color: appTheme.gray800,
+              Icon(
+                FluentIcons.book_24_regular,
+                color: appTheme.black900,
+                size: 30.v,
               ),
               Text(
                 "  Bank Details",
+                style: GoogleFonts.poppins(
+                    // fontFamily: marine,
+                    color: appTheme.gray800,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20.fSize),
+              )
+            ],
+          ),
+        ),
+        space(),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return const SumbolGraph();
+              },
+            ));
+          },
+          child: Row(
+            children: [
+              Icon(
+                FluentIcons.gantt_chart_24_regular,
+                color: appTheme.black900,
+                size: 30.v,
+              ),
+              Text(
+                "  Chart",
                 style: GoogleFonts.poppins(
                     // fontFamily: marine,
                     color: appTheme.gray800,

@@ -16,4 +16,10 @@ class FirebaseConstants {
     'X-Secret-Key': secretKey,
     'Content-Type': 'application/json',
   };
+
+  static const whatsapp = "+971586822529";
+  static const phone = "+97142940997";
+  static const mail = "asteronjewelsuae@gmail.com";
+  static const location =
+      "https://www.google.com/maps/search/?api=1&query=25.2702380,55.2988099";
 }

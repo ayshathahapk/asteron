@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../Core/CommenWidgets/space.dart';
@@ -31,9 +32,18 @@ class _NewsScreenState extends ConsumerState<NewsScreen> {
             padding: EdgeInsets.only(top: 30.h, left: 18.h, right: 18.h),
             child: Column(
               children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(FontAwesomeIcons.arrowLeft,
+                          color: appTheme.gold)),
+                ),
                 Image.asset(
                   ImageConstants.logo,
-                  width: SizeUtils.width * 0.30,
+                  width: SizeUtils.width * 0.50,
                 ),
                 Text(
                   DateFormat('MMM/dd/yyyy-h:mm a').format(DateTime.now()),

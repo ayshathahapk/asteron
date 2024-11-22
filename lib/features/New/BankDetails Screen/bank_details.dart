@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../../Core/CommenWidgets/custom_text_field.dart';
@@ -82,10 +83,19 @@ class _DetailsState extends ConsumerState<Details> {
             controller: _controller,
             child: Column(
               children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(FontAwesomeIcons.arrowLeft,
+                          color: appTheme.gold)),
+                ),
                 space(),
                 Image.asset(
                   ImageConstants.logo,
-                  width: SizeUtils.width * 0.30,
+                  width: SizeUtils.width * 0.50,
                 ),
                 space(),
                 Text(
